@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Твоя сказка | Генератор</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="print.css" media="print">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-controls">
+            <button id="night-mode-toggle">🌙 Ночной режим</button>
+            <div class="progress-bar">
+                <div class="progress" id="generation-progress">0%</div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="book-generator">
+        <div id="book-preview" class="book-preview">
+            <!-- Книга будет сгенерирована здесь -->
+        </div>
+        
+        <div class="editor-tools">
+            <h3>Редактор фото:</h3>
+            <div class="tool-group">
+                <label>Размер: <span id="size-value">100%</span></label>
+                <input type="range" id="photo-size" min="50" max="150" value="100">
+            </div>
+            
+            <div class="tool-group">
+                <label>Яркость: <span id="brightness-value">100%</span></label>
+                <input type="range" id="photo-brightness" min="50" max="150" value="100">
+            </div>
+            
+            <div class="tool-group">
+                <label>Контраст: <span id="contrast-value">100%</span></label>
+                <input type="range" id="photo-contrast" min="50" max="150" value="100">
+            </div>
+            
+            <button id="reset-photo">Сбросить настройки</button>
+        </div>
+        
+        <div class="controls">
+            <button id="prev-page">← Назад</button>
+            <span id="page-counter">Страница 1 из 10</span>
+            <button id="next-page">Вперед →</button>
+            
+            <div class="action-buttons">
+                <button id="print-btn">🖨️ Распечатать</button>
+                <button id="download-pdf">📥 Скачать PDF</button>
+                <button id="save-project">💾 Сохранить проект</button>
+                <button id="new-book">✨ Новая книга</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/generator.js"></script>
+    <script src="scripts/pdf.js"></script>
+    <script src="scripts/editor.js"></script>
+</body>
+</html>
