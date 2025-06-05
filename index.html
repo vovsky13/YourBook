@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>StoryWraps Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Caveat:wght@500&family=Patrick+Hand&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Создай свою персональную сказку!</h1>
+        
+        <!-- Шаг 0: Ввод имени -->
+        <div class="step">
+            <h2>1. Введи своё имя</h2>
+            <input type="text" id="user-name" placeholder="Имя для обложки книги">
+        </div>
+        
+        <!-- Шаг 1: Загрузка фото -->
+        <div class="step">
+            <h2>2. Загрузи своё фото</h2>
+            <div class="upload-zone" id="photo-drop-zone">
+                <span>Перетащи сюда фото или</span>
+                <input type="file" id="photo-upload" accept="image/*">
+                <label for="photo-upload" class="btn">Выбрать файл</label>
+            </div>
+            <div id="photo-preview" class="preview-container"></div>
+        </div>
+        
+        <!-- Шаг 2: Выбор сказки -->
+        <div class="step">
+            <h2>3. Выбери сказку</h2>
+            <div class="tale-selector">
+                <div class="tale-card" data-id="red-riding-hood">
+                    <img src="assets/previews/red-riding-hood.jpg" alt="Красная Шапочка">
+                    <h3>Красная Шапочка</h3>
+                </div>
+                <div class="tale-card" data-id="snow-white">
+                    <img src="assets/previews/snow-white.jpg" alt="Белоснежка">
+                    <h3>Белоснежка</h3>
+                </div>
+                <div class="tale-card" data-id="cinderella">
+                    <img src="assets/previews/cinderella.jpg" alt="Золушка">
+                    <h3>Золушка</h3>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Шаг 3: Дополнительные настройки -->
+        <div class="step">
+            <h2>4. Настройки книги</h2>
+            
+            <div class="setting-group">
+                <label>Язык:</label>
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="ru">Русский</button>
+                    <button class="lang-btn" data-lang="ro">Română</button>
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <label>Шрифт текста:</label>
+                <select id="font-select">
+                    <option value="'Comic Neue', cursive">Веселый (Comic Neue)</option>
+                    <option value="'Caveat', cursive">Рукописный (Caveat)</option>
+                    <option value="'Patrick Hand', cursive">Детский (Patrick Hand)</option>
+                    <option value="'Times New Roman', serif">Классический (Times New Roman)</option>
+                </select>
+            </div>
+            
+            <div class="setting-group">
+                <label>Стиль обложки:</label>
+                <select id="cover-style">
+                    <option value="classic">Классический</option>
+                    <option value="magical">Волшебный</option>
+                    <option value="royal">Королевский</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Шаг 4: Генерация -->
+        <div class="step">
+            <button id="generate-btn" class="generate-button">Создать мою сказку!</button>
+        </div>
+    </div>
+
+    <script src="scripts/upload.js"></script>
+</body>
+</html>
