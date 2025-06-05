@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StoryMagic - Создай свою сказку</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <title>MagicBook - Персонализированные детские книги</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #6a5acd;
             --primary-light: #9388db;
             --secondary: #ff9e6d;
+            --pink: #ff7eb9;
+            --blue: #5dade2;
             --dark: #2d3748;
             --light: #f8f9fa;
             --gray: #e2e8f0;
-            --success: #48bb78;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
@@ -39,71 +40,81 @@
             overflow: hidden;
             box-shadow: var(--shadow);
             min-height: 90vh;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
             background: var(--primary);
             color: white;
-            padding: 20px 40px;
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
 
         .logo {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 800;
         }
 
         .logo-icon {
-            font-size: 2.2rem;
+            font-size: 2rem;
         }
 
-        .language-switcher {
+        .nav-tabs {
             display: flex;
-            gap: 8px;
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 5px;
         }
 
-        .lang-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: none;
-            color: white;
-            padding: 8px 15px;
+        .nav-tab {
+            padding: 8px 20px;
             border-radius: 50px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
         }
 
-        .lang-btn.active, .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .nav-tab.active {
+            background: white;
+            color: var(--primary);
         }
 
         .main-content {
             display: flex;
+            flex: 1;
             min-height: 75vh;
         }
 
-        .creation-panel {
-            width: 40%;
-            padding: 30px;
+        .sidebar {
+            width: 260px;
             background: var(--light);
             border-right: 1px solid var(--gray);
-        }
-
-        .preview-panel {
-            width: 60%;
-            padding: 30px;
-            background: #fdfcff;
+            padding: 20px;
             display: flex;
             flex-direction: column;
         }
 
+        .creation-panel {
+            flex: 1;
+            padding: 30px;
+            background: white;
+            overflow-y: auto;
+        }
+
         .step-container {
             margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            background: #f9f9ff;
+            border: 1px solid var(--gray);
         }
 
         .step-header {
@@ -126,8 +137,14 @@
         }
 
         .step-title {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 700;
+        }
+
+        .step-subtitle {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 5px;
         }
 
         .form-group {
@@ -141,7 +158,7 @@
             font-size: 0.95rem;
         }
 
-        input[type="text"], select {
+        input[type="text"], select, textarea {
             width: 100%;
             padding: 14px;
             border: 2px solid var(--gray);
@@ -151,9 +168,134 @@
             transition: border-color 0.3s;
         }
 
-        input[type="text"]:focus, select:focus {
+        input[type="text"]:focus, select:focus, textarea:focus {
             border-color: var(--primary);
             outline: none;
+        }
+
+        .gender-selector {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .gender-card {
+            flex: 1;
+            border: 2px solid var(--gray);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gender-card.boy {
+            border-color: var(--blue);
+            background: rgba(93, 173, 226, 0.05);
+        }
+
+        .gender-card.girl {
+            border-color: var(--pink);
+            background: rgba(255, 126, 185, 0.05);
+        }
+
+        .gender-card.selected {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .gender-card.boy.selected {
+            border-color: var(--blue);
+            box-shadow: 0 10px 20px rgba(93, 173, 226, 0.2);
+        }
+
+        .gender-card.girl.selected {
+            border-color: var(--pink);
+            box-shadow: 0 10px 20px rgba(255, 126, 185, 0.2);
+        }
+
+        .gender-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .boy .gender-icon { color: var(--blue); }
+        .girl .gender-icon { color: var(--pink); }
+
+        .book-type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .book-type-card {
+            border: 2px solid var(--gray);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-type-card.selected {
+            border-color: var(--primary);
+            background: rgba(106, 90, 205, 0.05);
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .book-type-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-type-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .book-type-desc {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        .ai-styles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .ai-style {
+            flex: 1;
+            min-width: 120px;
+            border: 2px solid var(--gray);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ai-style.selected {
+            border-color: var(--primary);
+            background: rgba(106, 90, 205, 0.05);
+        }
+
+        .ai-style img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            height: 80px;
+            object-fit: cover;
         }
 
         .upload-area {
@@ -164,6 +306,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             background: white;
+            margin-top: 15px;
         }
 
         .upload-area:hover {
@@ -182,182 +325,8 @@
             font-weight: 600;
         }
 
-        .upload-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .tale-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .tale-card {
-            border: 2px solid var(--gray);
-            border-radius: 12px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .tale-card:hover {
-            border-color: var(--primary-light);
-            transform: translateY(-3px);
-        }
-
-        .tale-card.selected {
-            border-color: var(--primary);
-            background: rgba(106, 90, 205, 0.05);
-            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.1);
-        }
-
-        .tale-card img {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            height: 120px;
-            object-fit: cover;
-        }
-
-        .tale-card h4 {
-            font-size: 1rem;
-            margin-bottom: 5px;
-        }
-
-        .tale-card p {
-            font-size: 0.85rem;
-            color: #718096;
-        }
-
-        .preview-container {
-            flex: 1;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .preview-header {
-            background: var(--primary);
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        .book-preview {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .book-cover {
-            width: 80%;
-            max-width: 300px;
-            background: linear-gradient(135deg, #6a5acd 0%, #9388db 100%);
-            border-radius: 10px;
-            padding: 30px;
-            text-align: center;
-            color: white;
-            box-shadow: 0 10px 30px rgba(106, 90, 205, 0.3);
-            margin-bottom: 30px;
-        }
-
-        .cover-title {
-            font-family: 'Patrick Hand', cursive;
-            font-size: 2.2rem;
-            margin: 20px 0 10px;
-        }
-
-        .cover-subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 30px;
-        }
-
-        .cover-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            border-top: 2px solid rgba(255, 255, 255, 0.3);
-            padding-top: 20px;
-            margin-top: 20px;
-        }
-
-        .preview-pages {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .preview-page {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            height: 180px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--gray);
-        }
-
-        .page-title {
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .page-content {
-            font-size: 0.8rem;
-            line-height: 1.5;
-            color: var(--dark);
-            opacity: 0.8;
-        }
-
-        .page-image {
-            position: absolute;
-            right: 10px;
-            bottom: 10px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-size: cover;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            padding: 20px;
-            justify-content: center;
-            border-top: 1px solid var(--gray);
-        }
-
         .btn {
-            padding: 14px 28px;
+            padding: 12px 24px;
             border-radius: 50px;
             font-weight: 700;
             cursor: pointer;
@@ -391,8 +360,142 @@
             background: rgba(106, 90, 205, 0.05);
         }
 
-        .btn-icon {
-            font-size: 1.2rem;
+        .preview-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .book-preview {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .book-cover {
+            width: 90%;
+            max-width: 300px;
+            background: linear-gradient(135deg, #6a5acd 0%, #9388db 100%);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 30px rgba(106, 90, 205, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .cover-title {
+            font-family: 'Comic Neue', cursive;
+            font-size: 2rem;
+            margin: 15px 0 10px;
+        }
+
+        .cover-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+
+        .cover-name {
+            font-size: 1.7rem;
+            font-weight: 700;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .preview-pages {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .preview-page {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .page-title {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .page-content {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+
+        .page-image {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-size: cover;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            justify-content: center;
+            border-top: 1px solid var(--gray);
+        }
+
+        .ai-processing {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(106, 90, 205, 0.2);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Адаптивность */
@@ -401,18 +504,15 @@
                 flex-direction: column;
             }
             
-            .creation-panel, .preview-panel {
+            .sidebar {
                 width: 100%;
-            }
-            
-            .creation-panel {
                 border-right: none;
                 border-bottom: 1px solid var(--gray);
             }
         }
 
         @media (max-width: 600px) {
-            .tale-grid {
+            .book-type-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -429,6 +529,10 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            .gender-selector {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -436,164 +540,175 @@
     <div class="app-container">
         <header>
             <div class="logo">
-                <span class="logo-icon">📖</span>
-                <span>StoryMagic</span>
+                <span class="logo-icon">📚</span>
+                <span>MagicBook</span>
             </div>
-            <div class="language-switcher">
-                <button class="lang-btn active">RU</button>
-                <button class="lang-btn">RO</button>
+            <div class="nav-tabs">
+                <div class="nav-tab active">RU</div>
+                <div class="nav-tab">RO</div>
             </div>
         </header>
         
         <div class="main-content">
-            <div class="creation-panel">
-                <!-- Шаг 1: Имя пользователя -->
+            <div class="sidebar">
                 <div class="step-container">
                     <div class="step-header">
                         <div class="step-number">1</div>
-                        <h2 class="step-title">Персонализация</h2>
+                        <div>
+                            <div class="step-title">Пол ребенка</div>
+                            <div class="step-subtitle">Выберите тему оформления</div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="user-name">Имя для обложки книги</label>
-                        <input type="text" id="user-name" placeholder="Введите ваше имя">
+                    <div class="gender-selector">
+                        <div class="gender-card boy">
+                            <div class="gender-icon">👦</div>
+                            <div class="gender-title">Для мальчика</div>
+                            <div class="gender-desc">Синие тона, машинки, роботы</div>
+                        </div>
+                        <div class="gender-card girl">
+                            <div class="gender-icon">👧</div>
+                            <div class="gender-title">Для девочки</div>
+                            <div class="gender-desc">Розовые тона, принцессы, цветы</div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Шаг 2: Загрузка фото -->
                 <div class="step-container">
                     <div class="step-header">
                         <div class="step-number">2</div>
-                        <h2 class="step-title">Ваше фото</h2>
+                        <div>
+                            <div class="step-title">Тип книги</div>
+                            <div class="step-subtitle">Выберите формат книги</div>
+                        </div>
                     </div>
-                    <div class="upload-area" id="upload-area">
-                        <div class="upload-icon">📸</div>
-                        <div class="upload-text">Перетащите сюда фото или нажмите для загрузки</div>
-                        <button class="upload-btn">Выбрать фото</button>
-                        <input type="file" id="photo-upload" accept="image/*" hidden>
+                    <div class="book-type-grid">
+                        <div class="book-type-card">
+                            <div class="book-type-icon">📖</div>
+                            <div class="book-type-title">Сказка</div>
+                            <div class="book-type-desc">Персонализированные истории</div>
+                        </div>
+                        <div class="book-type-card">
+                            <div class="book-type-icon">🔤</div>
+                            <div class="book-type-title">Учим алфавит</div>
+                            <div class="book-type-desc">Обучение буквам с картинками</div>
+                        </div>
+                        <div class="book-type-card">
+                            <div class="book-type-icon">🎨</div>
+                            <div class="book-type-title">Раскраска</div>
+                            <div class="book-type-desc">Персонализированные рисунки</div>
+                        </div>
+                        <div class="book-type-card">
+                            <div class="book-type-icon">➕</div>
+                            <div class="book-type-title">Учим цифры</div>
+                            <div class="book-type-desc">Математика для малышей</div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Шаг 3: Выбор сказки -->
                 <div class="step-container">
                     <div class="step-header">
                         <div class="step-number">3</div>
-                        <h2 class="step-title">Выберите сказку</h2>
-                    </div>
-                    <div class="tale-grid">
-                        <div class="tale-card selected" data-id="red-riding-hood">
-                            <img src="https://images.unsplash.com/photo-1547483238-f400e65ccd56?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Красная шапочка">
-                            <h4>Красная Шапочка</h4>
-                            <p>8 страниц</p>
-                        </div>
-                        <div class="tale-card" data-id="snow-white">
-                            <img src="https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Белоснежка">
-                            <h4>Белоснежка</h4>
-                            <p>10 страниц</p>
-                        </div>
-                        <div class="tale-card" data-id="cinderella">
-                            <img src="https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Золушка">
-                            <h4>Золушка</h4>
-                            <p>9 страниц</p>
-                        </div>
-                        <div class="tale-card" data-id="three-pigs">
-                            <img src="https://images.unsplash.com/photo-1596466596120-2a8e4b5d3a7a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Три поросенка">
-                            <h4>Три поросенка</h4>
-                            <p>7 страниц</p>
+                        <div>
+                            <div class="step-title">Стиль ИИ</div>
+                            <div class="step-subtitle">Преобразуем фото в стиль</div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Шаг 4: Настройки -->
-                <div class="step-container">
-                    <div class="step-header">
-                        <div class="step-number">4</div>
-                        <h2 class="step-title">Настройки книги</h2>
-                    </div>
-                    <div class="form-group">
-                        <label for="font-select">Шрифт текста</label>
-                        <select id="font-select">
-                            <option value="nunito">Обычный (Nunito)</option>
-                            <option value="patrick">Рукописный (Patrick Hand)</option>
-                            <option value="comic">Детский (Comic Sans)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="cover-style">Стиль обложки</label>
-                        <select id="cover-style">
-                            <option value="classic">Классический</option>
-                            <option value="magic">Волшебный</option>
-                            <option value="royal">Королевский</option>
-                        </select>
+                    <div class="ai-styles">
+                        <div class="ai-style">
+                            <img src="https://i.ibb.co/0jX1s0W/cartoon.jpg" alt="Мультяшный стиль">
+                            <div>Мультяшный</div>
+                        </div>
+                        <div class="ai-style">
+                            <img src="https://i.ibb.co/8x7dXr1/watercolor.jpg" alt="Акварель">
+                            <div>Акварель</div>
+                        </div>
+                        <div class="ai-style">
+                            <img src="https://i.ibb.co/Lv3zH1t/fantasy.jpg" alt="Фэнтези">
+                            <div>Фэнтези</div>
+                        </div>
+                        <div class="ai-style">
+                            <img src="https://i.ibb.co/0Yd0Z7r/comic.jpg" alt="Комикс">
+                            <div>Комикс</div>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <div class="preview-panel">
-                <div class="preview-container">
-                    <div class="preview-header">Предпросмотр книги</div>
-                    <div class="book-preview">
-                        <div class="book-cover">
-                            <div>Персональная сказка</div>
-                            <div class="cover-title">Красная Шапочка</div>
-                            <div class="cover-subtitle">С участием</div>
-                            <div class="cover-name" id="preview-name">Анна</div>
+            <div class="creation-panel">
+                <div class="step-container">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div>
+                            <div class="step-title">Персонализация</div>
+                            <div class="step-subtitle">Добавьте данные ребенка</div>
                         </div>
-                        
-                        <div class="preview-pages">
-                            <div class="preview-page">
-                                <div class="page-header">
-                                    <div class="page-title">Начало истории</div>
-                                    <div class="page-number">1</div>
-                                </div>
-                                <div class="page-content">
-                                    Жила-была маленькая девочка, которую все звали Красной Шапочкой...
-                                </div>
-                                <div class="page-image" id="page-image-1" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80');"></div>
-                            </div>
-                            
-                            <div class="preview-page">
-                                <div class="page-header">
-                                    <div class="page-title">Встреча с волком</div>
-                                    <div class="page-number">2</div>
-                                </div>
-                                <div class="page-content">
-                                    По дороге она встретила волка, который спросил, куда она идет...
-                                </div>
-                                <div class="page-image" id="page-image-2" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80');"></div>
-                            </div>
-                            
-                            <div class="preview-page">
-                                <div class="page-header">
-                                    <div class="page-title">В гостях у бабушки</div>
-                                    <div class="page-number">3</div>
-                                </div>
-                                <div class="page-content">
-                                    Когда Красная Шапочка пришла к бабушке, она заметила что-то странное...
-                                </div>
-                                <div class="page-image" id="page-image-3" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80');"></div>
-                            </div>
-                            
-                            <div class="preview-page">
-                                <div class="page-header">
-                                    <div class="page-title">Спасение</div>
-                                    <div class="page-number">4</div>
-                                </div>
-                                <div class="page-content">
-                                    В этот момент в домик вошел дровосек и спас бабушку и Красную Шапочку...
-                                </div>
-                                <div class="page-image" id="page-image-4" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80');"></div>
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="child-name">Имя ребенка</label>
+                        <input type="text" id="child-name" placeholder="Введите имя">
+                    </div>
+                    <div class="form-group">
+                        <label for="child-age">Возраст ребенка</label>
+                        <input type="text" id="child-age" placeholder="Введите возраст">
+                    </div>
+                </div>
+                
+                <div class="step-container">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <div>
+                            <div class="step-title">Фото ребенка</div>
+                            <div class="step-subtitle">Загрузите фото для ИИ обработки</div>
                         </div>
+                    </div>
+                    <div class="upload-area" id="upload-area">
+                        <div class="upload-icon">📸</div>
+                        <div class="upload-text">Перетащите сюда фото или нажмите для загрузки</div>
+                        <button class="btn btn-primary">Выбрать фото</button>
+                        <input type="file" id="photo-upload" accept="image/*" hidden>
                     </div>
                     
-                    <div class="action-buttons">
-                        <button class="btn btn-primary">
-                            <span class="btn-icon">🖨️</span> Распечатать книгу
-                        </button>
-                        <button class="btn btn-secondary">
-                            <span class="btn-icon">📥</span> Скачать PDF
-                        </button>
+                    <div class="ai-processing" id="ai-processing" style="display: none;">
+                        <div class="spinner"></div>
+                        <div>ИИ обрабатывает ваше фото...</div>
+                        <div class="progress-text">25%</div>
                     </div>
+                </div>
+                
+                <div class="step-container">
+                    <div class="step-header">
+                        <div class="step-number">6</div>
+                        <div>
+                            <div class="step-title">Выбор книги</div>
+                            <div class="step-subtitle">Выберите конкретную книгу</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-select">Название книги</label>
+                        <select id="book-select">
+                            <option value="alphabet-ru">Учим алфавит (Русский)</option>
+                            <option value="alphabet-ro">Învățăm alfabetul (Română)</option>
+                            <option value="numbers-ru">Учим цифры (Русский)</option>
+                            <option value="numbers-ro">Învățăm numerele (Română)</option>
+                            <option value="red-riding-ru">Красная Шапочка (Русский)</option>
+                            <option value="scufita-ro">Scufița Roșie (Română)</option>
+                            <option value="coloring-ru">Моя первая раскраска (Русский)</option>
+                            <option value="coloring-ro">Prima mea carte de colorat (Română)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-description">Особые пожелания</label>
+                        <textarea id="book-description" placeholder="Дополнительные пожелания к книге..." rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary">
+                        <span>🖨️</span> Создать и распечатать
+                    </button>
+                    <button class="btn btn-secondary">
+                        <span>📥</span> Предварительный просмотр
+                    </button>
                 </div>
             </div>
         </div>
@@ -601,9 +716,47 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Выбор пола
+            document.querySelectorAll('.gender-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.gender-card').forEach(c => {
+                        c.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    
+                    // Обновляем тему превью
+                    if (this.classList.contains('boy')) {
+                        document.documentElement.style.setProperty('--primary', '#5dade2');
+                    } else {
+                        document.documentElement.style.setProperty('--primary', '#ff7eb9');
+                    }
+                });
+            });
+            
+            // Выбор типа книги
+            document.querySelectorAll('.book-type-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.book-type-card').forEach(c => {
+                        c.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Выбор стиля ИИ
+            document.querySelectorAll('.ai-style').forEach(style => {
+                style.addEventListener('click', function() {
+                    document.querySelectorAll('.ai-style').forEach(s => {
+                        s.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+            
             // Загрузка фото
             const uploadArea = document.getElementById('upload-area');
             const photoUpload = document.getElementById('photo-upload');
+            const aiProcessing = document.getElementById('ai-processing');
             
             uploadArea.addEventListener('click', () => {
                 photoUpload.click();
@@ -615,45 +768,52 @@
                     const reader = new FileReader();
                     
                     reader.onload = function(event) {
-                        // Обновляем все превью изображений
-                        document.querySelectorAll('.page-image').forEach(img => {
-                            img.style.backgroundImage = `url('${event.target.result}')`;
-                        });
+                        // Показываем процесс обработки ИИ
+                        uploadArea.style.display = 'none';
+                        aiProcessing.style.display = 'block';
                         
-                        // Обновляем UI
-                        uploadArea.innerHTML = `
-                            <div style="text-align: center;">
-                                <img src="${event.target.result}" alt="Ваше фото" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary);">
-                                <div style="margin-top: 15px; font-weight: 600;">Фото загружено!</div>
-                                <button class="upload-btn" style="margin-top: 10px;">Изменить фото</button>
-                            </div>
-                        `;
+                        // Имитация обработки ИИ
+                        let progress = 0;
+                        const interval = setInterval(() => {
+                            progress += 5;
+                            aiProcessing.querySelector('.progress-text').textContent = `${progress}%`;
+                            
+                            if (progress >= 100) {
+                                clearInterval(interval);
+                                
+                                // Показываем обработанное фото
+                                uploadArea.innerHTML = `
+                                    <div style="text-align: center; padding: 20px;">
+                                        <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 15px;">Фото обработано ИИ!</div>
+                                        <img src="${event.target.result}" alt="Обработанное фото" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary);">
+                                        <div style="margin-top: 20px;">
+                                            <button class="btn btn-secondary" id="change-photo">Изменить фото</button>
+                                        </div>
+                                    </div>
+                                `;
+                                
+                                uploadArea.style.display = 'block';
+                                aiProcessing.style.display = 'none';
+                                
+                                // Обработчик кнопки изменения фото
+                                document.getElementById('change-photo').addEventListener('click', () => {
+                                    photoUpload.click();
+                                });
+                            }
+                        }, 200);
                     };
                     
                     reader.readAsDataURL(file);
                 }
             });
             
-            // Выбор сказки
-            document.querySelectorAll('.tale-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    document.querySelectorAll('.tale-card').forEach(c => {
-                        c.classList.remove('selected');
-                    });
-                    this.classList.add('selected');
-                    
-                    // Обновляем превью
-                    const title = this.querySelector('h4').textContent;
-                    document.querySelector('.cover-title').textContent = title;
-                });
-            });
-            
-            // Обновление имени
-            const userNameInput = document.getElementById('user-name');
-            const previewName = document.getElementById('preview-name');
-            
-            userNameInput.addEventListener('input', function() {
-                previewName.textContent = this.value || 'Ваше имя';
+            // Обновление имени в превью
+            const childNameInput = document.getElementById('child-name');
+            childNameInput.addEventListener('input', function() {
+                const previewName = document.querySelector('.cover-name');
+                if (previewName) {
+                    previewName.textContent = this.value || 'Имя ребенка';
+                }
             });
             
             // Drag and drop для загрузки фото
