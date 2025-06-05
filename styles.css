@@ -1,0 +1,174 @@
+:root {
+    --primary: #6a5acd;
+    --secondary: #ff7f50;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --night-bg: #1a1a2e;
+    --night-text: #e6e6e6;
+    --night-element: #16213e;
+}
+
+/* Ночной режим */
+.night-mode {
+    background: var(--night-bg);
+    color: var(--night-text);
+}
+
+.night-mode .book-page {
+    background: var(--night-element);
+    color: var(--night-text);
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+.night-mode .controls, 
+.night-mode .editor-tools {
+    background: var(--night-element);
+    border-color: #0f3460;
+}
+
+/* Стили обложки */
+.cover-page.classic {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border: 15px double #4b0082;
+}
+
+.cover-page.magical {
+    background: radial-gradient(circle, #e0eafc, #cfdef3);
+    border: 5px solid #9370db;
+    box-shadow: 0 0 20px rgba(147, 112, 219, 0.5);
+}
+
+.cover-page.royal {
+    background: linear-gradient(to right, #f8ecd1, #f1d3b3);
+    border: 10px ridge #d4af37;
+}
+
+.cover-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.cover-header h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    color: var(--primary);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.cover-header h2 {
+    font-size: 1.5em;
+    font-weight: normal;
+}
+
+.cover-header h3 {
+    font-size: 2em;
+    color: var(--secondary);
+    border-bottom: 2px solid var(--secondary);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.cover-image {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.cover-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cover-footer {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* Редактор */
+.editor-tools {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px solid #dee2e6;
+}
+
+.tool-group {
+    margin-bottom: 15px;
+}
+
+.tool-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.tool-group input[type="range"] {
+    width: 100%;
+}
+
+/* Страница заметок */
+.notes-page .page-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.notes-container {
+    display: flex;
+    flex: 1;
+    gap: 20px;
+}
+
+.notes-container textarea {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    resize: none;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+.drawing-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#drawing-canvas {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background: white;
+    cursor: crosshair;
+}
+
+#clear-canvas {
+    margin-top: 10px;
+    align-self: flex-end;
+}
+
+/* Progress bar */
+.progress-bar {
+    height: 10px;
+    background: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.3s ease;
+}
