@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MagicBook - Персонализированные детские книги</title>
+    <title>MagicBook AI - Персонализированные детские книги</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --primary: #6a5acd;
@@ -15,7 +18,10 @@
             --dark: #2d3748;
             --light: #f8f9fa;
             --gray: #e2e8f0;
+            --dark-gray: #a0aec0;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
         }
 
         * {
@@ -30,13 +36,14 @@
             color: var(--dark);
             min-height: 100vh;
             padding: 20px;
+            line-height: 1.6;
         }
 
         .app-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
+            border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--shadow);
             min-height: 90vh;
@@ -79,7 +86,7 @@
             border-radius: 50px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .nav-tab.active {
@@ -94,10 +101,10 @@
         }
 
         .sidebar {
-            width: 260px;
+            width: 300px;
             background: var(--light);
             border-right: 1px solid var(--gray);
-            padding: 20px;
+            padding: 25px;
             display: flex;
             flex-direction: column;
         }
@@ -107,14 +114,17 @@
             padding: 30px;
             background: white;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .step-container {
             margin-bottom: 30px;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 25px;
+            border-radius: var(--border-radius);
             background: #f9f9ff;
             border: 1px solid var(--gray);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
         .step-header {
@@ -126,14 +136,15 @@
         .step-number {
             background: var(--primary);
             color: white;
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
             font-weight: 700;
+            flex-shrink: 0;
         }
 
         .step-title {
@@ -142,8 +153,8 @@
         }
 
         .step-subtitle {
-            font-size: 0.9rem;
-            color: #718096;
+            font-size: 0.95rem;
+            color: var(--dark-gray);
             margin-top: 5px;
         }
 
@@ -155,22 +166,25 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            color: var(--dark);
         }
 
         input[type="text"], select, textarea {
             width: 100%;
-            padding: 14px;
+            padding: 14px 18px;
             border: 2px solid var(--gray);
             border-radius: 12px;
             font-family: 'Nunito', sans-serif;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: var(--transition);
+            background: white;
         }
 
         input[type="text"]:focus, select:focus, textarea:focus {
             border-color: var(--primary);
             outline: none;
+            box-shadow: 0 0 0 3px rgba(106, 90, 205, 0.15);
         }
 
         .gender-selector {
@@ -182,11 +196,14 @@
         .gender-card {
             flex: 1;
             border: 2px solid var(--gray);
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: var(--border-radius);
+            padding: 25px 15px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .gender-card.boy {
@@ -201,44 +218,56 @@
 
         .gender-card.selected {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         .gender-card.boy.selected {
             border-color: var(--blue);
-            box-shadow: 0 10px 20px rgba(93, 173, 226, 0.2);
+            box-shadow: 0 10px 25px rgba(93, 173, 226, 0.2);
         }
 
         .gender-card.girl.selected {
             border-color: var(--pink);
-            box-shadow: 0 10px 20px rgba(255, 126, 185, 0.2);
+            box-shadow: 0 10px 25px rgba(255, 126, 185, 0.2);
         }
 
         .gender-icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
         }
 
         .boy .gender-icon { color: var(--blue); }
         .girl .gender-icon { color: var(--pink); }
 
+        .gender-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .gender-desc {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
         .book-type-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin-top: 15px;
         }
 
         .book-type-card {
             border: 2px solid var(--gray);
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: var(--border-radius);
+            padding: 20px 15px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             height: 100%;
             display: flex;
             flex-direction: column;
+            align-items: center;
         }
 
         .book-type-card.selected {
@@ -250,63 +279,79 @@
 
         .book-type-icon {
             font-size: 2.5rem;
-            margin-bottom: 10px;
-            flex: 1;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+            background: rgba(106, 90, 205, 0.1);
+            color: var(--primary);
         }
 
         .book-type-title {
             font-weight: 700;
             margin-bottom: 5px;
+            font-size: 1.1rem;
         }
 
         .book-type-desc {
-            font-size: 0.85rem;
-            color: #718096;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
         }
 
         .ai-styles {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             margin-top: 15px;
         }
 
         .ai-style {
-            flex: 1;
-            min-width: 120px;
             border: 2px solid var(--gray);
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             padding: 15px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            overflow: hidden;
         }
 
         .ai-style.selected {
             border-color: var(--primary);
             background: rgba(106, 90, 205, 0.05);
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.1);
         }
 
-        .ai-style img {
+        .ai-style-img {
             width: 100%;
             border-radius: 8px;
             margin-bottom: 10px;
-            height: 80px;
+            height: 100px;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .ai-style:hover .ai-style-img {
+            transform: scale(1.05);
+        }
+
+        .ai-style-name {
+            font-weight: 600;
+            margin-top: 5px;
         }
 
         .upload-area {
             border: 2px dashed var(--gray);
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             padding: 40px 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             background: white;
             margin-top: 15px;
+            position: relative;
         }
 
         .upload-area:hover {
@@ -323,10 +368,11 @@
         .upload-text {
             margin-bottom: 15px;
             font-weight: 600;
+            font-size: 1.1rem;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 50px;
             font-weight: 700;
             cursor: pointer;
@@ -334,8 +380,9 @@
             font-size: 1rem;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
+            gap: 10px;
+            transition: var(--transition);
+            font-family: 'Nunito', sans-serif;
         }
 
         .btn-primary {
@@ -346,8 +393,12 @@
 
         .btn-primary:hover {
             background: var(--primary-light);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(106, 90, 205, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
         }
 
         .btn-secondary {
@@ -358,16 +409,23 @@
 
         .btn-secondary:hover {
             background: rgba(106, 90, 205, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .btn-large {
+            padding: 16px 35px;
+            font-size: 1.1rem;
         }
 
         .preview-container {
             background: white;
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--shadow);
             height: 100%;
             display: flex;
             flex-direction: column;
+            border: 1px solid var(--gray);
         }
 
         .preview-header {
@@ -376,11 +434,12 @@
             padding: 15px 20px;
             text-align: center;
             font-weight: 700;
+            font-size: 1.2rem;
         }
 
         .book-preview {
             flex: 1;
-            padding: 20px;
+            padding: 25px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -389,108 +448,122 @@
 
         .book-cover {
             width: 90%;
-            max-width: 300px;
+            max-width: 320px;
             background: linear-gradient(135deg, #6a5acd 0%, #9388db 100%);
-            border-radius: 10px;
-            padding: 25px;
+            border-radius: var(--border-radius);
+            padding: 30px;
             text-align: center;
             color: white;
             box-shadow: 0 10px 30px rgba(106, 90, 205, 0.3);
             margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
         }
 
         .cover-title {
             font-family: 'Comic Neue', cursive;
-            font-size: 2rem;
-            margin: 15px 0 10px;
+            font-size: 2.2rem;
+            margin: 20px 0 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .cover-subtitle {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             opacity: 0.9;
             margin-bottom: 25px;
         }
 
         .cover-name {
-            font-size: 1.7rem;
-            font-weight: 700;
+            font-size: 1.9rem;
+            font-weight: 800;
             border-top: 2px solid rgba(255, 255, 255, 0.3);
-            padding-top: 15px;
-            margin-top: 15px;
+            padding-top: 20px;
+            margin-top: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .preview-pages {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 20px;
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
         }
 
         .preview-page {
             background: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            height: 180px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            height: 200px;
             overflow: hidden;
             position: relative;
+            border: 1px solid var(--gray);
         }
 
         .page-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 1px solid var(--gray);
         }
 
         .page-title {
             font-weight: 700;
             color: var(--primary);
-            font-size: 0.9rem;
+            font-size: 1rem;
+        }
+
+        .page-number {
+            font-weight: 600;
+            color: var(--dark-gray);
         }
 
         .page-content {
-            font-size: 0.8rem;
-            line-height: 1.5;
+            font-size: 0.9rem;
+            line-height: 1.6;
             color: var(--dark);
-            opacity: 0.8;
         }
 
         .page-image {
             position: absolute;
-            right: 10px;
-            bottom: 10px;
-            width: 50px;
-            height: 50px;
+            right: 15px;
+            bottom: 15px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 3px solid white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             background-size: cover;
+            background-position: center;
         }
 
         .action-buttons {
             display: flex;
             gap: 15px;
-            padding: 20px;
+            padding: 25px;
             justify-content: center;
             border-top: 1px solid var(--gray);
         }
 
         .ai-processing {
             text-align: center;
-            padding: 20px;
+            padding: 30px 20px;
+            background: rgba(106, 90, 205, 0.03);
+            border-radius: var(--border-radius);
+            margin-top: 15px;
+            display: none;
         }
 
         .spinner {
             border: 4px solid rgba(106, 90, 205, 0.2);
             border-top: 4px solid var(--primary);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            margin: 0 auto 20px;
         }
 
         @keyframes spin {
@@ -498,8 +571,70 @@
             100% { transform: rotate(360deg); }
         }
 
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(106, 90, 205, 0.1);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .ai-result {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: rgba(106, 90, 205, 0.03);
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+
+        .ai-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 0 auto 20px;
+        }
+
+        .book-select-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .book-select-group select {
+            flex: 1;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        .powered-by {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 5px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
         /* Адаптивность */
-        @media (max-width: 900px) {
+        @media (max-width: 1100px) {
             .main-content {
                 flex-direction: column;
             }
@@ -511,7 +646,7 @@
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .book-type-grid {
                 grid-template-columns: 1fr;
             }
@@ -522,7 +657,7 @@
             
             .action-buttons {
                 flex-direction: column;
-                gap: 10px;
+                gap: 12px;
             }
             
             .btn {
@@ -533,6 +668,14 @@
             .gender-selector {
                 flex-direction: column;
             }
+            
+            .ai-styles {
+                grid-template-columns: 1fr;
+            }
+            
+            .book-cover {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -540,8 +683,8 @@
     <div class="app-container">
         <header>
             <div class="logo">
-                <span class="logo-icon">📚</span>
-                <span>MagicBook</span>
+                <span class="logo-icon"><i class="fas fa-book-spells"></i></span>
+                <span>MagicBook AI</span>
             </div>
             <div class="nav-tabs">
                 <div class="nav-tab active">RU</div>
@@ -561,14 +704,14 @@
                     </div>
                     <div class="gender-selector">
                         <div class="gender-card boy">
-                            <div class="gender-icon">👦</div>
+                            <div class="gender-icon"><i class="fas fa-child"></i></div>
                             <div class="gender-title">Для мальчика</div>
-                            <div class="gender-desc">Синие тона, машинки, роботы</div>
+                            <div class="gender-desc">Синие тона, приключения</div>
                         </div>
                         <div class="gender-card girl">
-                            <div class="gender-icon">👧</div>
+                            <div class="gender-icon"><i class="fas fa-child-dress"></i></div>
                             <div class="gender-title">Для девочки</div>
-                            <div class="gender-desc">Розовые тона, принцессы, цветы</div>
+                            <div class="gender-desc">Розовые тона, сказочные истории</div>
                         </div>
                     </div>
                 </div>
@@ -583,22 +726,22 @@
                     </div>
                     <div class="book-type-grid">
                         <div class="book-type-card">
-                            <div class="book-type-icon">📖</div>
+                            <div class="book-type-icon"><i class="fas fa-book-open"></i></div>
                             <div class="book-type-title">Сказка</div>
                             <div class="book-type-desc">Персонализированные истории</div>
                         </div>
                         <div class="book-type-card">
-                            <div class="book-type-icon">🔤</div>
+                            <div class="book-type-icon"><i class="fas fa-font"></i></div>
                             <div class="book-type-title">Учим алфавит</div>
                             <div class="book-type-desc">Обучение буквам с картинками</div>
                         </div>
                         <div class="book-type-card">
-                            <div class="book-type-icon">🎨</div>
+                            <div class="book-type-icon"><i class="fas fa-paint-brush"></i></div>
                             <div class="book-type-title">Раскраска</div>
                             <div class="book-type-desc">Персонализированные рисунки</div>
                         </div>
                         <div class="book-type-card">
-                            <div class="book-type-icon">➕</div>
+                            <div class="book-type-icon"><i class="fas fa-calculator"></i></div>
                             <div class="book-type-title">Учим цифры</div>
                             <div class="book-type-desc">Математика для малышей</div>
                         </div>
@@ -610,26 +753,34 @@
                         <div class="step-number">3</div>
                         <div>
                             <div class="step-title">Стиль ИИ</div>
-                            <div class="step-subtitle">Преобразуем фото в стиль</div>
+                            <div class="step-subtitle">Выберите стиль для фото</div>
                         </div>
                     </div>
                     <div class="ai-styles">
                         <div class="ai-style">
-                            <img src="https://i.ibb.co/0jX1s0W/cartoon.jpg" alt="Мультяшный стиль">
-                            <div>Мультяшный</div>
+                            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" class="ai-style-img" alt="Мультяшный стиль">
+                            <div class="ai-style-name">Мультяшный</div>
                         </div>
                         <div class="ai-style">
-                            <img src="https://i.ibb.co/8x7dXr1/watercolor.jpg" alt="Акварель">
-                            <div>Акварель</div>
+                            <img src="https://images.unsplash.com/photo-1579546929662-711aa81148cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" class="ai-style-img" alt="Акварель">
+                            <div class="ai-style-name">Акварель</div>
                         </div>
                         <div class="ai-style">
-                            <img src="https://i.ibb.co/Lv3zH1t/fantasy.jpg" alt="Фэнтези">
-                            <div>Фэнтези</div>
+                            <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" class="ai-style-img" alt="Фэнтези">
+                            <div class="ai-style-name">Фэнтези</div>
                         </div>
                         <div class="ai-style">
-                            <img src="https://i.ibb.co/0Yd0Z7r/comic.jpg" alt="Комикс">
-                            <div>Комикс</div>
+                            <img src="https://images.unsplash.com/photo-1531259683007-016a7b628fc3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" class="ai-style-img" alt="Комикс">
+                            <div class="ai-style-name">Комикс</div>
                         </div>
+                    </div>
+                </div>
+                
+                <div class="footer-note">
+                    <div>Интегрировано с</div>
+                    <div class="powered-by">
+                        <i class="fas fa-robot"></i>
+                        <span>DeepSeek AI</span>
                     </div>
                 </div>
             </div>
@@ -644,11 +795,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="child-name">Имя ребенка</label>
+                        <label for="child-name"><i class="fas fa-user"></i> Имя ребенка</label>
                         <input type="text" id="child-name" placeholder="Введите имя">
                     </div>
                     <div class="form-group">
-                        <label for="child-age">Возраст ребенка</label>
+                        <label for="child-age"><i class="fas fa-birthday-cake"></i> Возраст ребенка</label>
                         <input type="text" id="child-age" placeholder="Введите возраст">
                     </div>
                 </div>
@@ -662,16 +813,26 @@
                         </div>
                     </div>
                     <div class="upload-area" id="upload-area">
-                        <div class="upload-icon">📸</div>
+                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
                         <div class="upload-text">Перетащите сюда фото или нажмите для загрузки</div>
-                        <button class="btn btn-primary">Выбрать фото</button>
+                        <button class="btn btn-primary"><i class="fas fa-camera"></i> Выбрать фото</button>
                         <input type="file" id="photo-upload" accept="image/*" hidden>
                     </div>
                     
-                    <div class="ai-processing" id="ai-processing" style="display: none;">
+                    <div class="ai-processing" id="ai-processing">
                         <div class="spinner"></div>
-                        <div>ИИ обрабатывает ваше фото...</div>
-                        <div class="progress-text">25%</div>
+                        <div class="step-title">ИИ обрабатывает ваше фото</div>
+                        <div class="step-subtitle">DeepSeek преобразует изображение в выбранном стиле</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progress-bar"></div>
+                        </div>
+                        <div class="progress-text" id="progress-text">0%</div>
+                    </div>
+                    
+                    <div class="ai-result" id="ai-result">
+                        <div class="step-title"><i class="fas fa-check-circle"></i> Фото успешно обработано!</div>
+                        <img src="" class="ai-image" id="ai-image">
+                        <button class="btn btn-secondary" id="change-photo"><i class="fas fa-sync"></i> Изменить фото</button>
                     </div>
                 </div>
                 
@@ -684,30 +845,51 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="book-select">Название книги</label>
-                        <select id="book-select">
-                            <option value="alphabet-ru">Учим алфавит (Русский)</option>
-                            <option value="alphabet-ro">Învățăm alfabetul (Română)</option>
-                            <option value="numbers-ru">Учим цифры (Русский)</option>
-                            <option value="numbers-ro">Învățăm numerele (Română)</option>
-                            <option value="red-riding-ru">Красная Шапочка (Русский)</option>
-                            <option value="scufita-ro">Scufița Roșie (Română)</option>
-                            <option value="coloring-ru">Моя первая раскраска (Русский)</option>
-                            <option value="coloring-ro">Prima mea carte de colorat (Română)</option>
+                        <label for="book-type"><i class="fas fa-book"></i> Тип книги</label>
+                        <select id="book-type">
+                            <option value="fairy-tale">Сказка</option>
+                            <option value="alphabet">Алфавит</option>
+                            <option value="coloring">Раскраска</option>
+                            <option value="numbers">Цифры</option>
                         </select>
                     </div>
+                    
+                    <div class="book-select-group">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="book-language"><i class="fas fa-globe"></i> Язык</label>
+                            <select id="book-language">
+                                <option value="ru">Русский</option>
+                                <option value="ro">Румынский</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="flex: 2;">
+                            <label for="book-select"><i class="fas fa-list"></i> Название книги</label>
+                            <select id="book-select">
+                                <option value="alphabet-ru">Учим алфавит (Русский)</option>
+                                <option value="alphabet-ro">Învățăm alfabetul (Română)</option>
+                                <option value="numbers-ru">Учим цифры (Русский)</option>
+                                <option value="numbers-ro">Învățăm numerele (Română)</option>
+                                <option value="red-riding-ru">Красная Шапочка (Русский)</option>
+                                <option value="scufita-ro">Scufița Roșie (Română)</option>
+                                <option value="coloring-ru">Моя первая раскраска (Русский)</option>
+                                <option value="coloring-ro">Prima mea carte de colorat (Română)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
-                        <label for="book-description">Особые пожелания</label>
+                        <label for="book-description"><i class="fas fa-edit"></i> Особые пожелания</label>
                         <textarea id="book-description" placeholder="Дополнительные пожелания к книге..." rows="3"></textarea>
                     </div>
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="btn btn-primary">
-                        <span>🖨️</span> Создать и распечатать
+                    <button class="btn btn-primary btn-large" id="generate-btn">
+                        <i class="fas fa-magic"></i> Создать книгу
                     </button>
-                    <button class="btn btn-secondary">
-                        <span>📥</span> Предварительный просмотр
+                    <button class="btn btn-secondary btn-large">
+                        <i class="fas fa-eye"></i> Предпросмотр
                     </button>
                 </div>
             </div>
@@ -717,20 +899,23 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Выбор пола
-            document.querySelectorAll('.gender-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    document.querySelectorAll('.gender-card').forEach(c => {
-                        c.classList.remove('selected');
-                    });
-                    this.classList.add('selected');
-                    
-                    // Обновляем тему превью
-                    if (this.classList.contains('boy')) {
-                        document.documentElement.style.setProperty('--primary', '#5dade2');
-                    } else {
-                        document.documentElement.style.setProperty('--primary', '#ff7eb9');
-                    }
+            const boyCard = document.querySelector('.gender-card.boy');
+            const girlCard = document.querySelector('.gender-card.girl');
+            
+            boyCard.addEventListener('click', function() {
+                document.querySelectorAll('.gender-card').forEach(c => {
+                    c.classList.remove('selected');
                 });
+                this.classList.add('selected');
+                document.documentElement.style.setProperty('--primary', '#5dade2');
+            });
+            
+            girlCard.addEventListener('click', function() {
+                document.querySelectorAll('.gender-card').forEach(c => {
+                    c.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                document.documentElement.style.setProperty('--primary', '#ff7eb9');
             });
             
             // Выбор типа книги
@@ -757,6 +942,10 @@
             const uploadArea = document.getElementById('upload-area');
             const photoUpload = document.getElementById('photo-upload');
             const aiProcessing = document.getElementById('ai-processing');
+            const aiResult = document.getElementById('ai-result');
+            const aiImage = document.getElementById('ai-image');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
             
             uploadArea.addEventListener('click', () => {
                 photoUpload.click();
@@ -771,33 +960,26 @@
                         // Показываем процесс обработки ИИ
                         uploadArea.style.display = 'none';
                         aiProcessing.style.display = 'block';
+                        aiResult.style.display = 'none';
                         
-                        // Имитация обработки ИИ
+                        // Имитация обработки ИИ с прогрессом
                         let progress = 0;
                         const interval = setInterval(() => {
                             progress += 5;
-                            aiProcessing.querySelector('.progress-text').textContent = `${progress}%`;
+                            progressBar.style.width = `${progress}%`;
+                            progressText.textContent = `${progress}%`;
                             
                             if (progress >= 100) {
                                 clearInterval(interval);
                                 
-                                // Показываем обработанное фото
-                                uploadArea.innerHTML = `
-                                    <div style="text-align: center; padding: 20px;">
-                                        <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 15px;">Фото обработано ИИ!</div>
-                                        <img src="${event.target.result}" alt="Обработанное фото" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary);">
-                                        <div style="margin-top: 20px;">
-                                            <button class="btn btn-secondary" id="change-photo">Изменить фото</button>
-                                        </div>
-                                    </div>
-                                `;
-                                
-                                uploadArea.style.display = 'block';
+                                // Показываем результат
+                                aiImage.src = event.target.result;
                                 aiProcessing.style.display = 'none';
+                                aiResult.style.display = 'block';
                                 
-                                // Обработчик кнопки изменения фото
-                                document.getElementById('change-photo').addEventListener('click', () => {
-                                    photoUpload.click();
+                                // Обновляем превью на страницах
+                                document.querySelectorAll('.page-image').forEach(img => {
+                                    img.style.backgroundImage = `url('${event.target.result}')`;
                                 });
                             }
                         }, 200);
@@ -805,6 +987,12 @@
                     
                     reader.readAsDataURL(file);
                 }
+            });
+            
+            // Обработчик кнопки изменения фото
+            document.getElementById('change-photo').addEventListener('click', () => {
+                aiResult.style.display = 'none';
+                uploadArea.style.display = 'block';
             });
             
             // Обновление имени в превью
@@ -839,6 +1027,42 @@
                     photoUpload.dispatchEvent(event);
                 }
             });
+            
+            // Генерация книги
+            document.getElementById('generate-btn').addEventListener('click', function() {
+                const childName = document.getElementById('child-name').value;
+                const bookType = document.getElementById('book-select').value;
+                
+                if (!childName) {
+                    alert('Пожалуйста, введите имя ребенка');
+                    return;
+                }
+                
+                if (!document.querySelector('.ai-style.selected')) {
+                    alert('Пожалуйста, выберите стиль для фото');
+                    return;
+                }
+                
+                if (!document.querySelector('.book-type-card.selected')) {
+                    alert('Пожалуйста, выберите тип книги');
+                    return;
+                }
+                
+                // Показываем сообщение об успехе
+                this.innerHTML = '<i class="fas fa-check"></i> Книга создана!';
+                this.classList.add('btn-success');
+                
+                // Через 2 секунды возвращаем исходное состояние
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-magic"></i> Создать книгу';
+                    this.classList.remove('btn-success');
+                }, 2000);
+            });
+            
+            // Инициализация: выбираем девочку по умолчанию
+            girlCard.click();
+            document.querySelector('.book-type-card').click();
+            document.querySelector('.ai-style').click();
         });
     </script>
 </body>
