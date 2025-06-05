@@ -6,169 +6,139 @@
     --night-bg: #1a1a2e;
     --night-text: #e6e6e6;
     --night-element: #16213e;
+    
+    /* DeepSeek Colors */
+    --deepseek-primary: #6FCF97;
+    --deepseek-secondary: #2D9CDB;
+    --deepseek-accent: #9B51E0;
+    --deepseek-dark: #1E2A38;
+    --deepseek-light: #F2F9F6;
+    --deepseek-gradient: linear-gradient(135deg, #6FCF97 0%, #2D9CDB 100%);
 }
 
-/* Ночной режим */
-.night-mode {
-    background: var(--night-bg);
-    color: var(--night-text);
+/* Глобальные стили DeepSeek */
+.deepseek-theme {
+    --primary: var(--deepseek-primary);
+    --secondary: var(--deepseek-secondary);
+    --light: var(--deepseek-light);
+    --dark: var(--deepseek-dark);
 }
 
-.night-mode .book-page {
-    background: var(--night-element);
-    color: var(--night-text);
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+/* Ночной режим DeepSeek */
+.deepseek-night-mode {
+    background: #0D1B2A;
+    color: #E0E1DD;
 }
 
-.night-mode .controls, 
-.night-mode .editor-tools {
-    background: var(--night-element);
-    border-color: #0f3460;
+.deepseek-night-mode .book-page {
+    background: #1B263B;
+    color: #E0E1DD;
+    box-shadow: 0 0 15px rgba(45, 156, 219, 0.2);
+    border-left: 1px solid rgba(45, 156, 219, 0.3);
 }
 
-/* Стили обложки */
-.cover-page.classic {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    border: 15px double #4b0082;
+.deepseek-night-mode .controls,
+.deepseek-night-mode .editor-tools {
+    background: #1B263B;
+    border-color: #415A77;
 }
 
-.cover-page.magical {
-    background: radial-gradient(circle, #e0eafc, #cfdef3);
-    border: 5px solid #9370db;
-    box-shadow: 0 0 20px rgba(147, 112, 219, 0.5);
-}
-
-.cover-page.royal {
-    background: linear-gradient(to right, #f8ecd1, #f1d3b3);
-    border: 10px ridge #d4af37;
-}
-
-.cover-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.cover-header h1 {
-    font-size: 3em;
-    margin-bottom: 10px;
-    color: var(--primary);
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-}
-
-.cover-header h2 {
-    font-size: 1.5em;
-    font-weight: normal;
-}
-
-.cover-header h3 {
-    font-size: 2em;
-    color: var(--secondary);
-    border-bottom: 2px solid var(--secondary);
-    display: inline-block;
-    padding-bottom: 5px;
-}
-
-.cover-image {
-    width: 200px;
-    height: 200px;
-    margin: 0 auto 30px;
-    border-radius: 50%;
+/* Стили обложки DeepSeek */
+.cover-page.deepseek {
+    background: var(--deepseek-gradient);
+    border: 3px solid var(--deepseek-accent);
+    position: relative;
     overflow: hidden;
-    border: 5px solid white;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
 }
 
-.cover-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.cover-footer {
+.cover-page.deepseek::before {
+    content: "";
     position: absolute;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-    font-style: italic;
-    opacity: 0.7;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    transform: rotate(30deg);
 }
 
-/* Редактор */
-.editor-tools {
-    background: #f8f9fa;
-    padding: 15px;
+.cover-header.deepseek h1 {
+    color: white;
+    text-shadow: 0 2px 10px rgba(31, 61, 76, 0.8);
+    font-size: 3.5em;
+    letter-spacing: -0.5px;
+    background: rgba(30, 42, 56, 0.6);
+    display: inline-block;
+    padding: 10px 30px;
     border-radius: 8px;
-    margin: 20px 0;
-    border: 1px solid #dee2e6;
 }
 
-.tool-group {
-    margin-bottom: 15px;
+.cover-header.deepseek h3 {
+    color: var(--deepseek-light);
+    border-bottom: 2px solid rgba(255,255,255,0.3);
 }
 
-.tool-group label {
-    display: block;
-    margin-bottom: 5px;
+/* Элементы интерфейса DeepSeek */
+.deepseek-ui .tool-group {
+    background: rgba(111, 207, 151, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid rgba(111, 207, 151, 0.2);
+}
+
+.deepseek-ui .tool-group label {
+    color: var(--deepseek-dark);
+    display: flex;
+    align-items: center;
+}
+
+.deepseek-ui .tool-group label::before {
+    content: "›";
+    color: var(--deepseek-primary);
+    margin-right: 8px;
     font-weight: bold;
 }
 
-.tool-group input[type="range"] {
-    width: 100%;
+/* Прогресс-бар DeepSeek */
+.deepseek-progress .progress-bar {
+    background: rgba(45, 156, 219, 0.15);
+    border-radius: 12px;
+    height: 14px;
 }
 
-/* Страница заметок */
-.notes-page .page-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+.deepseek-progress .progress {
+    background: var(--deepseek-gradient);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(111, 207, 151, 0.3);
 }
 
-.notes-container {
-    display: flex;
-    flex: 1;
-    gap: 20px;
+/* Холст для рисования DeepSeek */
+.deepseek-canvas #drawing-canvas {
+    border: 2px dashed var(--deepseek-primary);
+    background: rgba(242, 249, 246, 0.9);
 }
 
-.notes-container textarea {
-    flex: 1;
-    padding: 15px;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    resize: none;
-    font-family: inherit;
-    font-size: 16px;
+/* Адаптация существующих стилей */
+.cover-page.deepseek .cover-image {
+    border: 5px solid rgba(255,255,255,0.8);
+    box-shadow: 0 5px 25px rgba(30, 42, 56, 0.3);
 }
 
-.drawing-area {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+.cover-page.deepseek .cover-footer {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.9em;
 }
 
-#drawing-canvas {
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    background: white;
-    cursor: crosshair;
+/* Редактор DeepSeek */
+.deepseek-editor .editor-tools {
+    background: var(--deepseek-light);
+    border: 1px solid rgba(111, 207, 151, 0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-#clear-canvas {
-    margin-top: 10px;
-    align-self: flex-end;
-}
-
-/* Progress bar */
-.progress-bar {
-    height: 10px;
-    background: #e9ecef;
-    border-radius: 5px;
-    overflow: hidden;
-    margin-top: 10px;
-}
-
-.progress {
-    height: 100%;
-    background: var(--primary);
-    width: 0%;
-    transition: width 0.3s ease;
+/* Переключатель ночного режима */
+.mode-toggle.deepseek {
+    background: var(--deepseek-dark);
+    color: var(--deepseek-light);
+    border: 2px solid var(--deepseek-primary);
 }
